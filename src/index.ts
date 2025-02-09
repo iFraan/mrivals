@@ -114,9 +114,9 @@ class API {
     info() {
         const platform = this._raw.data.platformInfo;
         const info = this._raw.data.userInfo;
-        const data = this._raw.data.segments.find((x) => x.type == 'ranked-peaks');
+        const data = this._raw.data.segments.find((x) => x.type == 'overview');
 
-        const { lifetimePeakRanked } = data?.stats ?? {};
+        const { ranked, peakRanked } = data?.stats ?? {};
 
         const result: UserInfo = {
             platform: platform.platformSlug,
@@ -125,8 +125,8 @@ class API {
             userid: platform.platformUserIdentifier,
             avatar: platform.avatarUrl,
             pageViews: info.pageviews,
-            rank: lifetimePeakRanked.metadata?.tierName,
-            peakRank: lifetimePeakRanked.metadata?.tierName,
+            rank: ranked?.metadata?.tierName,
+            peakRank: peakRanked?.metadata?.tierName,
         };
 
         return result;
