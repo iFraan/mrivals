@@ -1,18 +1,29 @@
-import { exec } from 'child_process';
 import { BaseOptions, TrackerResponse } from './types/tracker';
 import { HeroesStats, HeroStats, OverviewStats, RoleStats, UserInfo } from './types/internal';
 
 const BASE_URL = `https://api.tracker.gg/api/v2/marvel-rivals/standard/profile/ign/{USERNAME}`;
 
-const fetchData = (url: string) =>
-    new Promise((resolve, reject) => {
-        exec(`curl --max-time 5 --user-agent 'Chrome/121' --url ${url}`, (err, result) => {
-            if (!result) {
-                reject(err);
-            }
-            resolve(JSON.parse(result));
-        });
-    });
+const fetchData = (url: string) => fetch(url, {
+    headers: {
+        'User-Agent': 'Chrome/121',
+        'Accept': 'application/json',
+        'Accept-Language': 'es-AR,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'DNT': '1',
+        'Upgrade-Insecure-Requests': '1'
+    },
+    credentials: 'omit',
+    referrerPolicy: 'strict-origin-when-cross-origin',
+    mode: 'cors',
+}).then((res) => {
+    if (res.ok) {
+        return res.json();
+    }
+    throw new Error(res.statusText);
+});
 
 class API {
     username: string;
