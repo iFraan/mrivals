@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { BaseOptions, TrackerResponse } from './types/tracker';
-import { HeroesStats, HeroStats, OverviewStats, RoleStats, SeasonStats, UserInfo } from './types/internal';
+import { HeroesStats, HeroStats, OverviewStats, RoleStats, UserInfo } from './types/internal';
 
 const BASE_URL = `https://api.tracker.gg/api/v2/marvel-rivals/standard/profile/ign/{USERNAME}`;
 

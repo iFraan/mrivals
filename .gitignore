@@ -3,3 +3,6 @@ dist/
 
 # Modules
 node_modules/
+
+# Misc
+*.json
