@@ -1,8 +1,8 @@
 import { exec } from 'child_process';
-import { BaseOptions, SegmentSeasonStats, TrackerResponse } from './types/tracker';
+import { BaseOptions, TrackerResponse } from './types/tracker';
 import { AgentStats, GamemodesStats, SeasonStats, UserInfo } from './types/internal';
 
-const BASE_URL = `https://api.tracker.gg/api/v2/valorant/standard/profile/riot/{USERNAME}%23{TAG}`;
+const BASE_URL = `https://api.tracker.gg/api/v2/marvel-rivals/standard/profile/ign/{USERNAME}`;
 
 const fetchData = (url: string) =>
     new Promise((resolve, reject) => {
@@ -16,17 +16,15 @@ const fetchData = (url: string) =>
 
 class API {
     username: string;
-    tag: string;
     _raw: TrackerResponse;
 
-    constructor(username: string, tag: string) {
+    constructor(username: string) {
         this.username = username;
-        this.tag = tag;
     }
 
-    static async fetchUser(username: string, tag: string) {
-        const api = new API(username, tag);
-        api._raw = (await fetchData(BASE_URL.replace('{TAG}', tag).replace('{USERNAME}', username))) as TrackerResponse;
+    static async fetchUser(username: string) {
+        const api = new API(username);
+        api._raw = (await fetchData(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
         if (api._raw.errors) throw new Error(api._raw.errors[0].message);
         return api;
     }
@@ -97,8 +95,9 @@ class API {
     info() {
         const platform = this._raw.data.platformInfo;
         const info = this._raw.data.userInfo;
-        const data = this._raw.data.segments.find((x) => x.attributes?.playlist == 'competitive');
-        const stats = data.stats as SegmentSeasonStats;
+        const data = this._raw.data.segments.find((x) => x.type == 'ranked-peaks');
+
+        const { lifetimePeakRanked } = data?.stats ?? {};
 
         const result: UserInfo = {
             platform: platform.platformSlug,
@@ -107,8 +106,8 @@ class API {
             userid: platform.platformUserIdentifier,
             avatar: platform.avatarUrl,
             pageViews: info.pageviews,
-            rank: stats?.rank.metadata.tierName,
-            peakRank: stats?.peakRank.metadata.tierName,
+            rank: lifetimePeakRanked.metadata?.tierName,
+            peakRank: lifetimePeakRanked.metadata?.tierName,
         };
 
         return result;
