@@ -78,6 +78,39 @@ class API {
         return result;
     }
 
+    peakRank() {
+        const data = this._raw.data.segments.find((x) => x.type === 'ranked-peaks');
+
+        const {lifetimePeakRanked} = data?.stats ?? {};
+
+        const peakTiers = Array.isArray(data?.stats.peakTiers?.value) ? data?.stats.peakTiers.value : [];
+
+        const result = {
+            peakTiers: peakTiers?.map((x) => ({
+                displayName:  x.displayName,
+                tierName: x.metadata.tierName,
+                tierShortName: x.metadata.tierShortName,
+                tierIcon: x.metadata.iconUrl,
+                tierColor: x.metadata.color,
+                season: x.metadata.seasonShortName,
+                seasonName: x.metadata.seasonName,
+                mmr: x.value as number,
+            })),
+            lifetimePeakRanked: {
+                displayName: lifetimePeakRanked.metadata.tierName,
+                tierName: lifetimePeakRanked.metadata.tierName,
+                tierShortName: lifetimePeakRanked.metadata.tierShortName,
+                tierIcon: lifetimePeakRanked.metadata.iconUrl,
+                tierColor: lifetimePeakRanked.metadata.color,
+                season: lifetimePeakRanked.metadata.seasonShortName,
+                seasonName: lifetimePeakRanked.metadata.seasonName,
+                mmr: lifetimePeakRanked.value as number,
+            }
+        }
+
+        return result;
+    }
+
     info() {
         const platform = this._raw.data.platformInfo;
         const info = this._raw.data.userInfo;

@@ -47,7 +47,7 @@ type SegmentStat = {
     rank: number | null;
     displayName: string;
     category: string;
-    value: number | string;
+    value: number | string | SegmentStat[];
     displayValue: string;
     displayType: string;
     metadata: {
@@ -56,6 +56,9 @@ type SegmentStat = {
         tierName?: string;
         tierShortName?: string;
         color?: string;
+        season?: number,
+        seasonName?: string,
+        seasonShortName?: string
     }
 };
 
@@ -75,7 +78,7 @@ export type Segments = {
         name?: string;
         imageUrl?: string;
         roleName?: string;
-        color?: string;
+        color?: string;        
     };
     stats: SegmentGameStats;
     expiryDate: string;
