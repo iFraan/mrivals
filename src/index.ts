@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { BaseOptions, TrackerResponse } from './types/tracker';
-import { AgentStats, GamemodesStats, SeasonStats, UserInfo } from './types/internal';
+import { HeroesStats, HeroStats, OverviewStats, RoleStats, SeasonStats, UserInfo } from './types/internal';
 
 const BASE_URL = `https://api.tracker.gg/api/v2/marvel-rivals/standard/profile/ign/{USERNAME}`;
 
@@ -29,11 +29,13 @@ class API {
         return api;
     }
 
-    ranked(options: BaseOptions = {}) {
-        const result = {} as SeasonStats;
+
+    overview(options: BaseOptions = {}) {
+        const result = {} as OverviewStats;
         const raw = options.raw ?? false;
-        const data = this._raw.data.segments.find((x) => x.attributes?.playlist == 'competitive');
+        const data = this._raw.data.segments.find((x) => x.type === 'overview');
         if (raw) {
+            // @ts-ignore
             result._raw = data;
         }
         if (data?.stats) {
@@ -44,51 +46,35 @@ class API {
         return result;
     }
 
-    unrated(options: BaseOptions = {}) {
-        const result = {} as SeasonStats;
-        const raw = options.raw ?? false;
-        const data = this._raw.data.segments.find((x) => x.attributes?.playlist == 'unrated');
-        if (raw) {
-            result._raw = data;
-        }
-        if (data?.stats) {
-            for (const key in data.stats) {
-                result[key] = data.stats[key].value;
+    heroes() {
+        const result = {} as HeroesStats;
+        const heroes = this._raw.data.segments.filter((x) => x.type === 'hero');
+
+        for (const hero of heroes) {
+            const heroName = hero.metadata.name;
+            result[heroName] = {} as HeroStats;
+            if (hero) {
+                for (const key in hero.stats) {
+                    result[heroName][key] = hero.stats[key].value;
+                }
             }
         }
         return result;
     }
 
-    gamemodes() {
-        const result = {} as GamemodesStats;
-        const playlists = this._raw.data.segments.filter((x) => x.type === 'season');
+    roles() {
+        const result = {} as RoleStats;
+        const roles = this._raw.data.segments.filter((x) => x.type === 'hero-role');
 
-        for (const playlist of playlists) {
-            const playlistName = playlist.metadata.playlistName;
-            result[playlistName] = {} as SeasonStats;
-            if (playlist) {
-                for (const key in playlist.stats) {
-                    result[playlistName][key] = playlist.stats[key].value;
+        for (const role of roles) {
+            const roleName = role.metadata.name;
+            result[roleName] = {} as HeroStats;
+            if (role) {
+                for (const key in role.stats) {
+                    result[roleName][key] = role.stats[key].value;
                 }
             }
         }
-
-        return result;
-    }
-
-    agents() {
-        const result = {} as AgentStats;
-        const agents = this._raw.data.segments.filter((x) => x.type === 'agent');
-
-        for (const playlist of agents) {
-            result[playlist.metadata.name] = {};
-            if (playlist) {
-                for (const key in playlist.stats) {
-                    result[playlist.metadata.name][key] = playlist.stats[key].value;
-                }
-            }
-        }
-
         return result;
     }
 
