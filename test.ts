@@ -7,7 +7,9 @@ const test = async () => {
         console.log('Overview:', user.overview());
         console.log('Heroes: ', user.heroes());
         console.log('Roles: ', user.roles());
+        console.log('Peak rank: ', user.peakRank());
         console.log('Raw: ', user.raw());
+
     } catch (e) {
         console.log(e);
     }
