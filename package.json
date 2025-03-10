@@ -1,6 +1,6 @@
 {
     "name": "mrivals",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "Wrapper/Scrapper for Marvel Rival stats.",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",

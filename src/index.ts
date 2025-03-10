@@ -55,7 +55,6 @@ class API {
         }
 
         api._raw = (await fetchData(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
-        console.log(api._raw)
         if (api._raw.errors) throw new Error(api._raw.errors[0].message);
         return api;
     }
