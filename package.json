@@ -1,7 +1,7 @@
 {
     "name": "mrivals",
-    "version": "2.0.0",
-    "description": "Wrapper/Scrapper for Valorant stats.",
+    "version": "3.0.0",
+    "description": "Wrapper/Scrapper for Marvel Rival stats.",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",

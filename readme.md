@@ -6,7 +6,7 @@
     <a href="https://github.com/iFraan/mrivals"><img src="https://badgen.net/github/stars/iFraan/mrivals?color=yellow" alt="Github Stars"/></a>
     <a href="https://github.com/iFraan/mrivals/issues"><img src="https://badgen.net/github/open-issues/iFraan/mrivals?color=green" alt="Issues"/></a>
     <h2>This a wrapper/scrapper of the TRNetwork site with <b>Marvel Rivals</b> stats.</h2>
-    <h3>There are no dependencies nor API key required.</h3>
+    <h3>There are no API keys required.</h3>
 </div>
 
 ## Instalation
