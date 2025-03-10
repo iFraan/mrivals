@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { BaseOptions, TrackerResponse } from './types/tracker';
+import { BaseOptions, FetchUserOptions, TrackerResponse } from './types/tracker';
 import { HeroesStats, HeroStats, OverviewStats, RoleStats, UserInfo } from './types/internal';
 
 dotenv.config();
@@ -7,7 +7,11 @@ dotenv.config();
 const BASE_URL = `https://api.tracker.gg/api/v2/marvel-rivals/standard/profile/ign/{USERNAME}`;
 const FLARESOLVERR_URL = process.env.FLARESOLVERR_URL || `http://localhost:8191/v1`;
 
-const fetchData = (url: string) => fetch(FLARESOLVERR_URL, {
+const config = {
+    flaresolverrUrl: FLARESOLVERR_URL,
+}
+
+const fetchData = (url: string) => fetch(config.flaresolverrUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -43,8 +47,13 @@ class API {
         this.username = username;
     }
 
-    static async fetchUser(username: string) {
+    static async fetchUser(username: string, options: FetchUserOptions = {}) {
         const api = new API(username);
+
+        if (options.flaresolverrUrl) {
+            config.flaresolverrUrl = options.flaresolverrUrl;
+        }
+
         api._raw = (await fetchData(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
         console.log(api._raw)
         if (api._raw.errors) throw new Error(api._raw.errors[0].message);

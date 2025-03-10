@@ -28,6 +28,10 @@ You have to set the `FLARESOLVERR_URL` enviroment variable to the url of your `f
 
 Also you can pass it as an options of `API.fetchUser`
 
+```js
+await API.fetchUser(username, { flaresolverrUrl: 'https://some.flaresolverr.domain:8191' });
+```
+
 ## Usage
 
 There is only one static function that takes an username.
