@@ -11,14 +11,22 @@
 
 ## Instalation
 
-> This module uses `curl` to fetch data
-> I assume every OS should have it but worth mentioning it anyhow...
+> This module uses `flaresolverr` to fetch data
+> You need to have an `flaresolverr` instance to use this library, using the default docker image is fine.
 
 ### To install use:
 
 ```shell
 npm i mrivals
 ```
+
+### Set enviroments variables
+
+> This programs defaults this env to http://localhost:8191
+
+You have to set the `FLARESOLVERR_URL` enviroment variable to the url of your `flaresolverr` instance.
+
+Also you can pass it as an options of `API.fetchUser`
 
 ## Usage
 

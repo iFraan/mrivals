@@ -1,26 +1,36 @@
+import * as dotenv from 'dotenv';
 import { BaseOptions, TrackerResponse } from './types/tracker';
 import { HeroesStats, HeroStats, OverviewStats, RoleStats, UserInfo } from './types/internal';
 
-const BASE_URL = `https://api.tracker.gg/api/v2/marvel-rivals/standard/profile/ign/{USERNAME}`;
+dotenv.config();
 
-const fetchData = (url: string) => fetch(url, {
-    headers: {
-        'User-Agent': 'Chrome/121',
-        'Accept': 'application/json',
-        'Accept-Language': 'es-AR,en;q=0.9',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Connection': 'keep-alive',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'DNT': '1',
-        'Upgrade-Insecure-Requests': '1'
-    },
-    credentials: 'omit',
-    referrerPolicy: 'strict-origin-when-cross-origin',
-    mode: 'cors',
-}).then((res) => {
+const BASE_URL = `https://api.tracker.gg/api/v2/marvel-rivals/standard/profile/ign/{USERNAME}`;
+const FLARESOLVERR_URL = process.env.FLARESOLVERR_URL || `http://localhost:8191/v1`;
+
+const fetchData = (url: string) => fetch(FLARESOLVERR_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      cmd: "request.get",
+      url: url,
+      maxTimeout: 60000,
+    }),
+}).then(async (res) => {
     if (res.ok) {
-        return res.json();
+        const data = await res.json();
+        const responseText = data.solution.response;
+        
+        let jsonContent = responseText;
+
+        if (responseText.startsWith('<html>')) {
+            // Extract content between <pre> tags
+            const match = responseText.match(/<pre[^>]*>([\s\S]*?)<\/pre>/i);
+            if (match && match[1]) {
+                jsonContent = match[1].trim();
+            }
+        }
+        
+        return JSON.parse(jsonContent);
     }
     throw new Error(res.statusText);
 });
@@ -36,6 +46,7 @@ class API {
     static async fetchUser(username: string) {
         const api = new API(username);
         api._raw = (await fetchData(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
+        console.log(api._raw)
         if (api._raw.errors) throw new Error(api._raw.errors[0].message);
         return api;
     }
@@ -149,6 +160,5 @@ class API {
 }
 
 export {
-    API as VAPI, // compability
     API,
 };

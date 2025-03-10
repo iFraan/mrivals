@@ -11,7 +11,7 @@ export type TrackerPlatformInfo = {
 };
 
 export type TrackerUserInfo = {
-    userId: string;
+    userId: number;
     isPremium: boolean;
     isVerified: boolean;
     isInfluencer: boolean;
