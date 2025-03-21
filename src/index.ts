@@ -11,7 +11,7 @@ const config = {
     flaresolverrUrl: FLARESOLVERR_URL,
 }
 
-const fetchData = (url: string) => fetch(config.flaresolverrUrl, {
+const fetchWithFlaresolverr = (url: string) => fetch(config.flaresolverrUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -39,6 +39,11 @@ const fetchData = (url: string) => fetch(config.flaresolverrUrl, {
     throw new Error(res.statusText);
 });
 
+const fetchWithBrowser = (url: string) => fetch(url).then((res) => res.json()).catch((err) => {
+    console.error(err);
+    throw new Error(err)
+})
+
 class API {
     username: string;
     _raw: TrackerResponse;
@@ -52,9 +57,11 @@ class API {
 
         if (options.flaresolverrUrl) {
             config.flaresolverrUrl = options.flaresolverrUrl;
+            api._raw = (await fetchWithFlaresolverr(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
+        } else {
+            api._raw = (await fetchWithBrowser(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
         }
 
-        api._raw = (await fetchData(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
         if (api._raw.errors) throw new Error(api._raw.errors[0].message);
         return api;
     }

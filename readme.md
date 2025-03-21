@@ -11,22 +11,18 @@
 
 ## Instalation
 
-> This module uses `flaresolverr` to fetch data
-> You need to have an `flaresolverr` instance to use this library, using the default docker image is fine.
-
 ### To install use:
 
 ```shell
 npm i mrivals
 ```
 
-### Set enviroments variables
+### Using it in a server enviroment (not in a browser)
 
-> This programs defaults this env to http://localhost:8191
+> This module can use `flaresolverr` to fetch data.
+> You need to have an `flaresolverr` instance to use this library, using the default docker image is fine.
 
-You have to set the `FLARESOLVERR_URL` enviroment variable to the url of your `flaresolverr` instance.
-
-Also you can pass it as an options of `API.fetchUser`
+You have to pass it's url as an option of `API.fetchUser`
 
 ```js
 await API.fetchUser(username, { flaresolverrUrl: 'https://some.flaresolverr.domain:8191' });
