@@ -25,7 +25,6 @@ npm i mrivals
   - You can try your luck with `fetch` _(node v16+)_, switch to `curl` if it fails
   - `flaresolverr` is recommended _(the default docker image is ok)_
 
-There is only one static function that takes an username.
 
 You have to pass it's url as an option of `API.fetchUser`
 
@@ -35,8 +34,10 @@ await API.fetchUser(username, { flaresolverrUrl: 'https://some.flaresolverr.doma
 
 ## Example
 
+There is only one static function that takes an username.
+
 ```js
-/* returns an API class instance with the data already fetched */
+// this returns an API instance with the data already fetched
 await API.fetchUser(username); // user#tag
 ```
 
