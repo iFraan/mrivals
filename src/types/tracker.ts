@@ -1,11 +1,3 @@
-export type BaseOptions = {
-    raw?: boolean;
-};
-
-export type FetchUserOptions = {
-    flaresolverrUrl?: string;
-}
-
 export type TrackerPlatformInfo = {
     platformSlug: string;
     platformUserId: string;

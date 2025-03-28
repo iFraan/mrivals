@@ -1,48 +1,8 @@
-import * as dotenv from 'dotenv';
-import { BaseOptions, FetchUserOptions, TrackerResponse } from './types/tracker';
-import { HeroesStats, HeroStats, OverviewStats, RoleStats, UserInfo } from './types/internal';
-
-dotenv.config();
+import { TrackerResponse } from './types/tracker';
+import { HeroesStats, HeroStats, OverviewStats, RoleStats, UserInfo, BaseOptions, FetchUserOptions } from './types/internal';
+import { getFetcher } from './helpers/fetcher';
 
 const BASE_URL = `https://api.tracker.gg/api/v2/marvel-rivals/standard/profile/ign/{USERNAME}`;
-const FLARESOLVERR_URL = process.env.FLARESOLVERR_URL || `http://localhost:8191/v1`;
-
-const config = {
-    flaresolverrUrl: FLARESOLVERR_URL,
-}
-
-const fetchWithFlaresolverr = (url: string) => fetch(config.flaresolverrUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      cmd: "request.get",
-      url: url,
-      maxTimeout: 60000,
-    }),
-}).then(async (res) => {
-    if (res.ok) {
-        const data = await res.json();
-        const responseText = data.solution.response;
-        
-        let jsonContent = responseText;
-
-        if (responseText.startsWith('<html>')) {
-            // Extract content between <pre> tags
-            const match = responseText.match(/<pre[^>]*>([\s\S]*?)<\/pre>/i);
-            if (match && match[1]) {
-                jsonContent = match[1].trim();
-            }
-        }
-        
-        return JSON.parse(jsonContent);
-    }
-    throw new Error(res.statusText);
-});
-
-const fetchWithBrowser = (url: string) => fetch(url).then((res) => res.json()).catch((err) => {
-    console.error(err);
-    throw new Error(err)
-})
 
 class API {
     username: string;
@@ -55,12 +15,12 @@ class API {
     static async fetchUser(username: string, options: FetchUserOptions = {}) {
         const api = new API(username);
 
-        if (options.flaresolverrUrl) {
-            config.flaresolverrUrl = options.flaresolverrUrl;
-            api._raw = (await fetchWithFlaresolverr(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
-        } else {
-            api._raw = (await fetchWithBrowser(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
-        }
+        const fetchData = getFetcher({
+            flaresolverrUrl: options.flaresolverrUrl,
+            useCurl: options.useCurl ?? false,
+        });
+
+        api._raw = (await fetchData(BASE_URL.replace('{USERNAME}', username))) as TrackerResponse;
 
         if (api._raw.errors) throw new Error(api._raw.errors[0].message);
         return api;
