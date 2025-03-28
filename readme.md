@@ -26,10 +26,19 @@ npm i mrivals
   - `flaresolverr` is recommended _(the default docker image is ok)_
 
 
-You have to pass it's url as an option of `API.fetchUser`
+You can pass additional options:
+
+| Option          | Type    | Description                          | Default     |
+| --------------- | ------- | ------------------------------------ | ----------- |
+| useCurl         | boolean | Whether to use curl instead of fetch | false       |
+| flaresolverrUrl | string  | The url of the flaresolverr instance | `undefined` |
+
 
 ```js
-await API.fetchUser(username, { flaresolverrUrl: 'https://some.flaresolverr.domain:8191' });
+await API.fetchUser(username, { 
+  flaresolverrUrl: 'https://some.flaresolverr.domain:8191', // will use flaresolverr instance 
+  useCurl: true, // will use curl instead of fetch (ommited when flaresolverrUrl is provided)
+});
 ```
 
 ## Example
