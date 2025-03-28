@@ -1,3 +1,12 @@
+export type BaseOptions = {
+    raw?: boolean;
+};
+
+export type FetchUserOptions = {
+    flaresolverrUrl?: string;
+    useCurl?: boolean;
+};
+
 export type RoleType = 'Strategist' | 'Duelist' | 'Vanguard';
 
 export type HeroStats = {
