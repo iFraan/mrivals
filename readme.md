@@ -11,16 +11,21 @@
 
 ## Instalation
 
-### To install use:
-
 ```shell
 npm i mrivals
 ```
 
-### Using it in a server enviroment (not in a browser)
+## Usage:
 
-> This module can use `flaresolverr` to fetch data.
-> You need to have an `flaresolverr` instance to use this library, using the default docker image is fine.
+**Note:** This module can use many strategies to fetch data: `fetch`, `curl` and `flaresolverr`
+
+- For browser envoriments:
+  - Default `fetch` should be ok, can use a `flaresolverr` if available
+- For server enviroments:
+  - You can try your luck with `fetch` _(node v16+)_, switch to `curl` if it fails
+  - `flaresolverr` is recommended _(the default docker image is ok)_
+
+There is only one static function that takes an username.
 
 You have to pass it's url as an option of `API.fetchUser`
 
@@ -28,9 +33,7 @@ You have to pass it's url as an option of `API.fetchUser`
 await API.fetchUser(username, { flaresolverrUrl: 'https://some.flaresolverr.domain:8191' });
 ```
 
-## Usage
-
-There is only one static function that takes an username.
+## Example
 
 ```js
 /* returns an API class instance with the data already fetched */
