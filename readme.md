@@ -1,88 +1,147 @@
 <div align="center">
-    <h1>mrivals</h1>
-    <a href="https://www.codefactor.io/repository/github/ifraan/mrivals"><img src="https://www.codefactor.io/repository/github/ifraan/mrivals/badge"    alt="CodeFactor" /></a>
-    <a href="https://www.npmjs.com/package/mrivals"><img src="https://badgen.net/npm/v/mrivals?color=blue" alt="NPM-Version"/></a>
-    <a href="https://www.npmjs.com/package/mrivals"><img src="https://badgen.net/npm/dt/mrivals?color=blue" alt="NPM-Downloads"/></a>
-    <a href="https://github.com/iFraan/mrivals"><img src="https://badgen.net/github/stars/iFraan/mrivals?color=yellow" alt="Github Stars"/></a>
-    <a href="https://github.com/iFraan/mrivals/issues"><img src="https://badgen.net/github/open-issues/iFraan/mrivals?color=green" alt="Issues"/></a>
-    <h2>This a wrapper/scrapper of the TRNetwork site with <b>Marvel Rivals</b> stats.</h2>
-    <h3>There are no API keys required.</h3>
+    <h1>🦸‍♂️ mrivals</h1>
+    <p>
+        <a href="https://www.codefactor.io/repository/github/ifraan/mrivals"><img src="https://www.codefactor.io/repository/github/ifraan/mrivals/badge" alt="CodeFactor" /></a>
+        <a href="https://www.npmjs.com/package/mrivals"><img src="https://badgen.net/npm/v/mrivals?color=blue" alt="NPM-Version"/></a>
+        <a href="https://www.npmjs.com/package/mrivals"><img src="https://badgen.net/npm/dt/mrivals?color=blue" alt="NPM-Downloads"/></a>
+        <a href="https://github.com/iFraan/mrivals"><img src="https://badgen.net/github/stars/iFraan/mrivals?color=yellow" alt="Github Stars"/></a>
+        <a href="https://github.com/iFraan/mrivals/issues"><img src="https://badgen.net/github/open-issues/iFraan/mrivals?color=green" alt="Issues"/></a>
+    </p>
+    <h3>📊 A wrapper/scraper for <strong>Marvel Rivals</strong> stats</h3>
+    <p><em>Powered by TRNetwork - No API keys required!</em></p>
 </div>
 
-## Instalation
+---
 
-```shell
-npm i mrivals
+## 🚀 Installation
+
+> **Note:** This module supports multiple fetching strategies for maximum compatibility across different environments.
+
+### 💻 Install the package
+
+```bash
+npm install mrivals
 ```
 
-## Usage:
+---
 
-**Note:** This module can use many strategies to fetch data: `fetch`, `curl` and `flaresolverr`
+## 📖 Usage
 
-- For browser envoriments:
-  - Default `fetch` should be ok, can use a `flaresolverr` if available
-- For server enviroments:
-  - You can try your luck with `fetch` _(node v16+)_, switch to `curl` if it fails
-  - `flaresolverr` is recommended _(the default docker image is ok)_
+> **Important:** You must call `API.fetchUser` before using any other method.
 
+### 🔧 Fetching Strategies
 
-You can pass additional options:
+This module can use multiple strategies to fetch data: **fetch**, **curl**, and **flaresolverr**
+
+#### 🌐 Browser Environments
+- Default **fetch** should work fine
+- Can use **flaresolverr** if available for enhanced reliability
+
+#### 🖥️ Server Environments
+- Try **fetch** first _(Node.js v16+)_
+- Switch to **curl** if fetch fails
+- **flaresolverr** is recommended _(default Docker image works great)_
+
+### ⚙️ Configuration Options
 
 | Option          | Type    | Description                          | Default     |
-| --------------- | ------- | ------------------------------------ | ----------- |
-| useCurl         | boolean | Whether to use curl instead of fetch | false       |
-| flaresolverrUrl | string  | The url of the flaresolverr instance | `undefined` |
+|-----------------|---------|--------------------------------------|-------------|
+| `useCurl`       | boolean | Whether to use curl instead of fetch | `false`     |
+| `flaresolverrUrl` | string | The URL of the flaresolverr instance | `undefined` |
 
-
-```js
-await API.fetchUser(username, { 
-  flaresolverrUrl: 'https://some.flaresolverr.domain:8191', // will use flaresolverr instance 
-  useCurl: true, // will use curl instead of fetch (ommited when flaresolverrUrl is provided)
+```javascript
+await API.fetchUser(username, {
+  flaresolverrUrl: 'https://some.flaresolverr.domain:8191', // Use flaresolverr instance
+  useCurl: true, // Use curl instead of fetch (omitted when flaresolverrUrl is provided)
 });
 ```
 
-## Example
+### 🆔 Username Format
 
-There is only one static function that takes an username.
+Simply use your username: `username` (no need for #tag format)
 
-```js
-// this returns an API instance with the data already fetched
-await API.fetchUser(username); // user#tag
-```
+### 🔧 Available Methods
 
-> You must call **API.fetchUser** before using any other method.
+| Method       | Description                           |
+|--------------|---------------------------------------|
+| `info()`     | Returns user and MMR information      |
+| `overview()` | Returns overview stats                |
+| `heroes()`   | Returns hero-specific stats           |
+| `roles()`    | Returns role-specific stats           |
+| `peakRank()` | Returns peak rank information         |
+| `raw()`      | Returns raw response data             |
 
-| Methods     | Description         |
-| ----------- | ------------------- |
-| info        | user and mmr info   |
-| overview    | overview stats      |
-| heroes      | heroes stats        |
-| roles       | roles stats         |
-| peakRank    | peak rank           |
-| raw         | return raw response |
+---
 
-## Example code
+## 💡 Example Usage
 
-_Feel free to use my riot username for testing_
+> Feel free to use my username for testing: `ifraan`
 
-```js
+```javascript
 const { API } = require('mrivals');
 
-try {
-  const user = await API.fetchUser('ifraan');
-
-  console.log('User:', user.info());
-  console.log('Overview:', user.overview());
-  console.log('Heroes:', user.heroes());
-  console.log('Roles:', user.roles());
-  console.log('Peak MMR:', user.peakRank());
-  console.log('Raw:', user.raw());
-} catch (e) {
-  console.log(e);
-  /* Error: We could not find the player [player]. */
+async function getPlayerStats() {
+    try {
+        // Fetch user data
+        const user = await API.fetchUser('ifraan');
+        
+        // Get basic user info
+        console.log('👤 User Info:', user.info());
+        /*
+        Output: User and MMR information
+        */
+        
+        // Get overview stats
+        console.log('📊 Overview:', user.overview());
+        /*
+        Output: General gameplay statistics
+        */
+        
+        // Get hero stats
+        console.log('🦸‍♂️ Heroes:', user.heroes());
+        /*
+        Output: Hero-specific performance data
+        */
+        
+        // Get role stats
+        console.log('🎭 Roles:', user.roles());
+        /*
+        Output: Role-based statistics
+        */
+        
+        // Get peak rank
+        console.log('🏆 Peak Rank:', user.peakRank());
+        /*
+        Output: Highest achieved rank
+        */
+        
+        // Get raw data
+        console.log('📋 Raw Data:', user.raw());
+        /*
+        Output: Complete unprocessed response
+        */
+        
+    } catch (error) {
+        console.error('❌ Error:', error.message);
+        // Example: "We could not find the player [player]."
+    }
 }
+
+// Run the example
+getPlayerStats();
 ```
 
-# Disclaimer
+---
 
-This project is fully for educational purposes and if you want to use the marvel rivals api in a production/commertial enviroment you should ask or email the guys at [TRNetwork](https://tracker.gg/).
+## 📄 License & Disclaimer
+
+This project is created for **educational purposes only** and is not affiliated with NetEase Games or Marvel Rivals.
+
+If you want to use Marvel Rivals data in a production/commercial environment, please contact the team at [TRNetwork](https://tracker.gg/).
+
+---
+
+<div align="center">
+    <p>Made with ❤️ by <a href="https://github.com/iFraan">iFraan</a></p>
+    <p><em>Assemble your stats! 🚀</em></p>
+</div>
